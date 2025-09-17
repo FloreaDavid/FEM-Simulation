@@ -6,6 +6,7 @@ from mpi4py import MPI
 
 comm = MPI.COMM_WORLD
 
+# Objective function: squared error between FEM result and target displacement
 def objective(x):
     E = float(x[0])
     val = run_simulation(E=E)
@@ -16,8 +17,9 @@ def objective(x):
         print(f"[objective] E={E}, val={val}, error={error}")
     return error
 
+# Run optimization using L-BFGS-B method
 def run_optimization():
-    x0 = np.array([10.0])
+    x0 = np.array([10.0]) # initial guess for Young's modulus
     res = minimize(objective, x0, bounds=[(1.0, 100.0)])
     if comm.rank == 0:
         print("Optimization result:", res)
